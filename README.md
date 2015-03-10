@@ -5,7 +5,7 @@ Replay twitter events to explore relevant geographic information as the conversa
 1. Talk about the final viz, collect data, talk about the final viz, format  
 data, talk about the final viz, add 3rd party data, reformat data, ...  
 
-2. Decide on inital region for map:
+2. Decide on inital region for map:  
 West: -105.5270  
 North: 40.2342  
 East: -105.0233  
