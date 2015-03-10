@@ -1,2 +1,2 @@
 # maperator
-Replay twitter events and see how the geographic conversation unfolded.    
+Replay twitter events to explore relevant geographic information as the conversation unfolds.    
