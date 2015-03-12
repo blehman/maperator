@@ -4,3 +4,18 @@
    stroke:#ff00ff;
    stroke-width:4px;
   }
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    margin: 0;
+}
+
+#map {
+    width: 50%;
+    height: 70%;
+}

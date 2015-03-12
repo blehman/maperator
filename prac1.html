@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Testmap</title>
+  <meta charset="utf-8" />
+  <script src="http://cdn.leafletjs.com/leaflet-0.6.1/leaflet.js"></script>
+  <style>
+  @import url(http://cdn.leafletjs.com/leaflet-0.6.1/leaflet.css);
+  </style>
+</head>
+<body>
+  <div id="map" style="width: 960px; height: 900px"></div>
+  <script>
+  var map = L.map('map').setView([40.0274,-105.2519], 13);
+  var toolserver = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png');
+  var stamen = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {attribution: 'Add some attributes here!'}).addTo(map);
+  var baseLayers = {"stamen": stamen, "toolserver-mapnik":toolserver};
+  L.control.layers(baseLayers).addTo(map);</script>
+ </body>
+</html>
+
