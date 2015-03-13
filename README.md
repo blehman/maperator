@@ -16,4 +16,7 @@ South: 39.9088
   - [D3 Slider Examples](http://thematicmapping.org/playground/d3/d3.slider/)  
   - [D3 + Leaflet.js](http://bl.ocks.org/milkbread/5885443)
 
+4. Create a map and add points using the [tutorial on Leaflet.js](http://leafletjs.com/examples/quick-start.html)  
+[](https://raw.githubusercontent.com/blehman/maperator/master/imgs/mapPoints.png)
+
 
