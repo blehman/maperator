@@ -58,6 +58,9 @@ d3.json("data/BoulderFlood_viewer.json", function(collection) {
       twttr.widgets.createTweet(
           d3.select(this).attr('tweet').split('/')[5],
           document.getElementById('tweet'))
+      d3.select("#tweet")
+        .style("margin-left","850px")
+        .style("margin-top","-425px")
   });
 
  });
