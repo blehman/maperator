@@ -54,33 +54,13 @@ d3.json("data/BoulderFlood_viewer.json", function(collection) {
 
   circles = d3.selectAll(".tweet_location")
   circles.on("mouseover",function(event){
-    console.log(d3.select(this).attr('tweet'))
-  });
-
-        window.twttr = (function(d, s, id) {
-          var js, fjs = d.getElementsByTagName(s)[0],
-          t = window.twttr || {};
-          if (d.getElementById(id)) return;
-          js = d.createElement(s);
-          js.id = id;
-          js.src = "https://platform.twitter.com/widgets.js";
-          fjs.parentNode.insertBefore(js, fjs);
-         
-          t._e = [];
-          t.ready = function(f) {
-            t._e.push(f);
-          };
-         
-          return t;
-        }(document, "script", "twitter-wjs"));
-
+      d3.select("#tweet").selectAll("*").remove();
       twttr.widgets.createTweet(
-          '20',
-          document.getElementbyId('tweet'),
-          {
-            theme: 'dark'
-          }
-      );
+          d3.select(this).attr('tweet').split('/')[5],
+          document.getElementById('tweet'))
+  });
+  circles.on("mouseout",function(event){
+  });
 
  });
 
