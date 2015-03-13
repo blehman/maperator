@@ -4,22 +4,31 @@ var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-zr0n
 
 var map = L.map('map')
 .addLayer(mapboxTiles)
-.setView([40.0274,-105.2519], 13);
+.setView([40.0274,-105.2519], 10);
 
 function addPoints(svg,x){
     //console.log()
   
     if (x.value.hasOwnProperty("tweets")){
-        console.log(x.value.tweets.features)
-        x.value.tweets.features.forEach(function(d){
+        //console.log(x.value.tweets)
+        x.value.tweets.features.forEach(function(d,i){
             var circle = L.circle([d.geometry.coordinate[1],d.geometry.coordinate[0]], 500, {
                 color: 'red',
                 fillColor: '#f03',
                 fillOpacity: 0.2,
-                className: "tweet_location"
+                className: "tweet_location_pre_data"
             }).addTo(map);
+
+            var circleData = d3.selectAll(".tweet_location_pre_data")
+                .classed("tweet_location_pre_data",false)
+                .classed("tweet_location",true)
+                .attr("id","tweetID_"+d.properties.tweet.split('/')[5])
+                .attr("media",d.properties.link)
+                .attr("tweet",d.properties.tweet)
+                .attr("user",d.properties.user_id);
+
         })
-        console.log(["x.value.tweets: ",x.value.tweets.features])
+        //console.log(["x.value.tweets: ",x.value.tweets.features])
     };
 }
 
@@ -36,22 +45,42 @@ d3.json("data/BoulderFlood_viewer.json", function(collection) {
   dataArray = d3.entries(collection.time_series.interval_data);
 
   dataArray.map(function(d){addPoints(svg,d)});
-  d3.select("#map").attr("transform","translate( 400 , 100)")
-  
+  var tester = L.circle([40.0274,-105.2519], 500, {
+                color: 'yellow',
+                fillColor: '#f03',
+                fillOpacity: 0.2,
+                className: "practice_point"
+            }).addTo(map);
 
-  /*
-     var featuresdata = collection.features.filter(function(d) {
-     return d.properties.id == "route1"
-     });
+  circles = d3.selectAll(".tweet_location")
+  circles.on("mouseover",function(event){
+    console.log(d3.select(this).attr('tweet'))
+  });
 
-     var originANDdestination = [featuresdata[0], featuresdata[17]]()
+        window.twttr = (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0],
+          t = window.twttr || {};
+          if (d.getElementById(id)) return;
+          js = d.createElement(s);
+          js.id = id;
+          js.src = "https://platform.twitter.com/widgets.js";
+          fjs.parentNode.insertBefore(js, fjs);
+         
+          t._e = [];
+          t.ready = function(f) {
+            t._e.push(f);
+          };
+         
+          return t;
+        }(document, "script", "twitter-wjs"));
 
-     var ptFeatures = g.selectAll("circle")
-     .data(featuresdata)
-     .enter()
-     .append("circle")
-     .attr("r", 3)
-     .attr("class", "waypoints");
-     */
-});
+      twttr.widgets.createTweet(
+          '20',
+          document.getElementbyId('tweet'),
+          {
+            theme: 'dark'
+          }
+      );
+
+ });
 
