@@ -45,12 +45,14 @@ d3.json("data/BoulderFlood_viewer.json", function(collection) {
   dataArray = d3.entries(collection.time_series.interval_data);
 
   dataArray.map(function(d){addPoints(svg,d)});
-  var tester = L.circle([40.0274,-105.2519], 500, {
+
+/*  var tester = L.circle([40.0274,-105.2519], 500, {
                 color: 'yellow',
                 fillColor: '#f03',
                 fillOpacity: 0.2,
                 className: "practice_point"
             }).addTo(map);
+*/
 
   circles = d3.selectAll(".tweet_location")
   circles.on("mouseover",function(event){
