@@ -17,6 +17,6 @@ South: 39.9088
   - [D3 + Leaflet.js](http://bl.ocks.org/milkbread/5885443)
 
 4. Create a map and add points using the [tutorial on Leaflet.js](http://leafletjs.com/examples/quick-start.html)  
-[](https://raw.githubusercontent.com/blehman/maperator/master/imgs/mapPoints.png)
+![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/mapPoints.png)
 
 
