@@ -19,4 +19,11 @@ South: 39.9088
 4. Create a map and add points using the [tutorial on Leaflet.js](http://leafletjs.com/examples/quick-start.html)  
 ![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/mapPoints.png)
 
+5. Learn how to embed tweets programatically. 
+  - [Set up Twitter for Websites](https://dev.twitter.com/web/javascript/loading)
+  - [Embedded Tweet JavaScript Factory Function](https://dev.twitter.com/web/embedded-tweets/javascript-create)
+  
+
+
+
 
