@@ -59,8 +59,6 @@ d3.json("data/BoulderFlood_viewer.json", function(collection) {
           d3.select(this).attr('tweet').split('/')[5],
           document.getElementById('tweet'))
   });
-  circles.on("mouseout",function(event){
-  });
 
  });
 
