@@ -1,10 +1,28 @@
-var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-zr0njcqy/{z}/{x}/{y}.png', {
+/*var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-zr0njcqy/{z}/{x}/{y}.png', {
   attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
 });
+*/
 
-var map = L.map('map')
-.addLayer(mapboxTiles)
-.setView([40.0274,-105.2519], 10);
+//var map = L.map('map')
+//.addLayer(mapboxTiles)
+//.setView([40.0274,-105.2519], 10);
+
+
+  var map = L.map('map').setView([40.0274,-105.2519], 13);
+  var toolserver = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png');
+  var stamen = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {attribution: 'Add some attributes here!'}).addTo(map);
+  var baseLayers = {"stamen": stamen, "toolserver-mapnik":toolserver};
+
+  L.control.layers(baseLayers).addTo(map);
+
+  var map_width = window.innerWidth * 0.5
+  var map_height = window.innerHeight *0.8
+  var tweet_left_margin = (map_width + 80) + 'px'
+  var tweet_top_margin = (-(window.innerHeight * 0.4))+'px'
+
+  d3.select('#map')
+    .attr('width',map_width)
+    .attr('height',map_height)
 
 function addPoints(svg,x){
     if (x.value.hasOwnProperty("tweets")){
@@ -56,9 +74,10 @@ d3.json("data/BoulderFlood_viewer.json", function(collection) {
       twttr.widgets.createTweet(
           d3.select(this).attr('tweet').split('/')[5],
           document.getElementById('tweet'))
+      console.log(tweet_top_margin)
       d3.select("#tweet")
-        .style("margin-left","850px")
-        .style("margin-top","-425px")
+        .style("margin-left",tweet_left_margin)
+        .style("margin-top",tweet_top_margin)
   });
 
  });

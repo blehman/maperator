@@ -18,4 +18,11 @@ body {
 #map {
     width: 50%;
     height: 70%;
+    left: 50px;
+    top: 50px;
+}
+
+#tweet {
+  margin-left: 200;
+  margin-top: 50;
 }
