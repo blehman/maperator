@@ -20,9 +20,12 @@ body {
     height: 70%;
     left: 50px;
     top: 50px;
+    border: 2px solid;
 }
 
 #tweet {
   margin-left: 200;
   margin-top: 50;
 }
+
+

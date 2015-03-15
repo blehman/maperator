@@ -2,7 +2,7 @@ function set_values(){
   var map_width = window.innerWidth * 0.5
   var map_height = window.innerHeight * 0.8
   var tweet_left_margin = (map_width + 80) + 'px'
-  var tweet_top_margin = (-(window.innerHeight * 0.4))+'px'
+  var tweet_top_margin = (-(window.innerHeight * 0.5))+'px'
 
   d3.select("#tweet")
     .style("margin-left",tweet_left_margin)
@@ -11,7 +11,7 @@ function set_values(){
   d3.select('#map')
     .attr('width',map_width)
     .attr('height',map_height)
-};
+}
 
 function addPoints(x,map){
     if (x.value.hasOwnProperty("tweets")){
@@ -51,7 +51,7 @@ function build_map(){
   var baseLayers = {"stamen": stamen, "toolserver-mapnik":toolserver};
   L.control.layers(baseLayers).addTo(map);
   return map;
-};
+}
 
 
 d3.json("data/BoulderFlood_viewer.json", function(collection) {
@@ -59,8 +59,6 @@ d3.json("data/BoulderFlood_viewer.json", function(collection) {
 
   // build map and creat an svg.
   var map = build_map();
-  console.log(map.getPanes().overlayPane)
-  //var svg = d3.select(map.getPanes().overlayPane).append("svg");
 
   // Initialize map & tweet orientation.
   set_values();
@@ -83,6 +81,7 @@ d3.json("data/BoulderFlood_viewer.json", function(collection) {
           document.getElementById('tweet'))
   });
 /*
+  var svg = d3.select(map.getPanes().overlayPane).append("svg");
   var startDate = collection.time_series.metadata.time_start;
   var endDate = collection.time_series.metadata.time_end;
   var interval = collection.time_series.metadata.interval_minutes;
