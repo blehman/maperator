@@ -22,7 +22,10 @@ South: 39.9088
 5. Learn how to embed tweets programatically. 
   - [Set up Twitter for Websites](https://dev.twitter.com/web/javascript/loading)
   - [Embedded Tweet JavaScript Factory Function](https://dev.twitter.com/web/embedded-tweets/javascript-create)
-  
+
+6. Build a [line graph](http://bl.ocks.org/mbostock/3883245) for Tweet volume.  
+![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/timelineEmbed.png)
+
 
 
 
