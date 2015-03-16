@@ -1,5 +1,4 @@
 function set_values(timelineData,dateParsed){
-  console.log(window.innerHeight)
   var mapWidth = window.innerWidth * 0.5
   var mapHeight = window.innerHeight * 0.8
   var tweetLeftMargin = (mapWidth + 80) + 'px'
