@@ -51,7 +51,7 @@ function addPoints(x,map){
 
 
 function build_map(){
-    var map = L.map('map').setView([40.0274,-105.2519], 10);
+    var map = L.map('map').setView([40.0274,-105.2519], 13);
     var stamen = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {attribution: 'dev.'}).addTo(map);
     var toolserver = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png');
     var baseLayers = {"stamen": stamen, "toolserver-mapnik":toolserver};

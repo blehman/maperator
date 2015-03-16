@@ -26,7 +26,12 @@ South: 39.9088
 6. Build a [line graph](http://bl.ocks.org/mbostock/3883245) for Tweet volume.  
 ![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/timelineEmbed.png)
 
-
+7. Learn jitter techniques and apply an appropriate solution.
+ - [Force directed jitter](http://bl.ocks.org/rpgove/10603627) 
+ - [Custom project](https://gist.github.com/mbostock/5663666)
+ - [Ongoing discuss](http://stackoverflow.com/questions/27241216/jittering-geo-paths-using-d3-js)
+ - [Simple random jitter](https://github.com/blehman/maperator/blob/master/js/viz4.js#L31)
+![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/jitter.png)
 
 
 
