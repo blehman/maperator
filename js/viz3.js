@@ -1,8 +1,9 @@
 function set_values(timelineData,dateParsed){
+  console.log(window.innerHeight)
   var mapWidth = window.innerWidth * 0.5
   var mapHeight = window.innerHeight * 0.8
   var tweetLeftMargin = (mapWidth + 80) + 'px'
-  var tweetTopMargin = (-(window.innerHeight * 0.5))+'px'
+  var tweetTopMargin = (-(window.innerHeight)+33)+'px'
 
   d3.select("#tweet")
     .style("margin-left",tweetLeftMargin)
@@ -11,7 +12,6 @@ function set_values(timelineData,dateParsed){
   d3.select('#map')
     .attr('width',mapWidth)
     .attr('height',mapHeight)
-
 
   // Create timeline
   //console.log(["create_timeline",create_timeline]);
@@ -36,7 +36,6 @@ function addPoints(x,map){
                 .attr("media",d.properties.link)
                 .attr("tweet",d.properties.tweet)
                 .attr("user",d.properties.user_id);
-
         })
     };
 }
@@ -78,7 +77,6 @@ function create_timeline_data(dataArray){
 function create_timeline(data,mapWidth,dateParsed){
     // remove old timeline
     d3.select("#timeline").selectAll("*").remove();
-    
     var windowHeight = window.innerHeight
 
     var margin = {top: windowHeight*0.1, right: 0, bottom: windowHeight*0.1, left: 50},
@@ -95,10 +93,12 @@ function create_timeline(data,mapWidth,dateParsed){
 
     var xAxis = d3.svg.axis()
         .scale(x)
+        .ticks(Math.max(width/200,2))
         .orient("bottom");
 
     var yAxis = d3.svg.axis()
         .scale(y)
+        .ticks(Math.max(height/50,2))
         .orient("left");
 
     var line = d3.svg.line()
@@ -127,16 +127,19 @@ function create_timeline(data,mapWidth,dateParsed){
           .attr("transform", "translate(0," + height + ")")
           .call(xAxis);
 
-      svg.append("g")
+
+      if (windowHeight > 600){
+       svg.append("g")
           .attr("class", "y axis")
           .call(yAxis)
-        .append("text")
+
+        svg.append("text")
           .attr("transform", "rotate(-90)")
           .attr("y", 6)
           .attr("dy", ".71em")
           .style("text-anchor", "end")
           .text("Tweets");
-
+      };
       svg.append("path")
           .datum(data)
           .attr("class", "line")
@@ -182,12 +185,12 @@ function add_fore_directed(data){
         .text("Collision detection");
 
     var force = d3.layout.force()
-    .nodes(data)
-    .size([width, height])
-    .on("tick", tick)
-    .charge(-1)
-    .gravity(0)
-    .chargeDistance(20);
+        .nodes(data)
+        .size([width, height])
+        .on("tick", tick)
+        .charge(-1)
+        .gravity(0)
+        .chargeDistance(20);
 }
 
 d3.json("data/BoulderFlood_viewer.json", function(collection) {
@@ -215,8 +218,8 @@ d3.json("data/BoulderFlood_viewer.json", function(collection) {
 
   // Adjust map & tweet orientation when window is resized.
   window.addEventListener('resize', function(event){
-    var dateParsed = true
-    set_values(timelineData,dateParsed);
+      var dateParsed = true
+      set_values(timelineData,dateParsed);
   });
 
   // Mouseover event that produces embeded tweet
