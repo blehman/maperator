@@ -46,8 +46,9 @@ function build_map(){
 //.addLayer(mapboxTiles)
 //.setView([40.0274,-105.2519], 10);
   var map = L.map('map').setView([40.0274,-105.2519], 10);
+  var stamen = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {attribution: 'dev.'}).addTo(map);
   var toolserver = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png');
-  var stamen = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {attribution: 'Add some attributes here!'}).addTo(map);
+  //var baseLayers = {"stamen": stamen, "toolserver-mapnik":toolserver};
   var baseLayers = {"stamen": stamen, "toolserver-mapnik":toolserver};
   L.control.layers(baseLayers).addTo(map);
   return map;
@@ -57,6 +58,13 @@ function build_map(){
 d3.json("data/BoulderFlood_viewer.json", function(collection) {
   console.log(["collection:",collection])
 
+// Enventuall: render photos
+/*  d3.json("http://api.instagram.com/oembed?url=http://instagr.am/p/fA9uwTtkSN/",function(error, json) {
+    if (error) return console.warn(error);
+    data = json;
+    console.log(data)
+  });
+*/
   // build map and creat an svg.
   var map = build_map();
 
