@@ -1,16 +1,21 @@
-function set_values(){
-  var map_width = window.innerWidth * 0.5
-  var map_height = window.innerHeight * 0.8
-  var tweet_left_margin = (map_width + 80) + 'px'
-  var tweet_top_margin = (-(window.innerHeight * 0.5))+'px'
+function set_values(timelineData,dateParsed){
+  var mapWidth = window.innerWidth * 0.5
+  var mapHeight = window.innerHeight * 0.8
+  var tweetLeftMargin = (mapWidth + 80) + 'px'
+  var tweetTopMargin = (-(window.innerHeight * 0.5))+'px'
 
   d3.select("#tweet")
-    .style("margin-left",tweet_left_margin)
-    .style("margin-top",tweet_top_margin)
+    .style("margin-left",tweetLeftMargin)
+    .style("margin-top",tweetTopMargin)
 
   d3.select('#map')
-    .attr('width',map_width)
-    .attr('height',map_height)
+    .attr('width',mapWidth)
+    .attr('height',mapHeight)
+
+
+  // Create timeline
+  //console.log(["create_timeline",create_timeline]);
+  create_timeline(timelineData,mapWidth,dateParsed);
 
 }
 
@@ -70,11 +75,15 @@ function create_timeline_data(dataArray){
     return d3.entries(data)
 }
 
-function create_timeline(data){
-    console.log(["data:",data])
-    var margin = {top: 20, right: 20, bottom: 30, left: 50},
-        width = 960 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+function create_timeline(data,mapWidth,dateParsed){
+    // remove old timeline
+    d3.select("#timeline").selectAll("*").remove();
+    
+    var windowHeight = window.innerHeight
+
+    var margin = {top: windowHeight*0.1, right: 0, bottom: windowHeight*0.1, left: 50},
+        width = mapWidth,
+        height =  windowHeight*0.3 - margin.top - margin.bottom;
 
     var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
 
@@ -96,7 +105,8 @@ function create_timeline(data){
         .x(function(d) { return x(d.key); })
         .y(function(d) { return y(d.value); });
 
-    var svg = d3.select("body").append("svg")
+    var svg = d3.select("#timeline")
+        .classed("timeline",true)
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
       .append("g")
@@ -104,8 +114,9 @@ function create_timeline(data){
 
 
       data.forEach(function(d) {
-        //console.log(d)
-        d.key = parseDate(d.key);
+        if (!dateParsed){
+            d.key = parseDate(d.key);
+        }
         d.value = +d.value;
       });
       x.domain(d3.extent(data, function(d) { return d.key; }));
@@ -124,7 +135,7 @@ function create_timeline(data){
           .attr("y", 6)
           .attr("dy", ".71em")
           .style("text-anchor", "end")
-          .text("Price ($)");
+          .text("Tweets");
 
       svg.append("path")
           .datum(data)
@@ -192,27 +203,25 @@ d3.json("data/BoulderFlood_viewer.json", function(collection) {
   // build map and creat an svg.
   var map = build_map();
 
+  // Transform object to array
+  var dataArray = d3.entries(collection.time_series.interval_data);
+  var timelineData = create_timeline_data(dataArray)
+  var dateParsed = false
   // Initialize map & tweet orientation.
-  set_values();
+  set_values(timelineData,dateParsed);
 
   // For each tweet, add a circle to map.
-  var dataArray = d3.entries(collection.time_series.interval_data);
   dataArray.map(function(d){addPoints(d,map)});
-
-  // Create timeline
-  //console.log(dataArray)
-  create_timeline(create_timeline_data(dataArray));
-  
-
-
-  var circles = d3.selectAll(".tweet_location")
 
   // Adjust map & tweet orientation when window is resized.
   window.addEventListener('resize', function(event){
-    set_values();
+    var dateParsed = true
+    set_values(timelineData,dateParsed);
   });
 
   // Mouseover event that produces embeded tweet
+  var circles = d3.selectAll(".tweet_location")
+
   circles.on("mouseover",function(event){
       d3.select("#tweet").selectAll("*").remove();
       twttr.widgets.createTweet(
