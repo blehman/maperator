@@ -37,3 +37,14 @@ South: 39.9088
    the timeline.
  - [Line graph tooltip] (http://bl.ocks.org/d3noob/e5daff57a04c2639125e)  
 ![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/dynamicUpdating.png)
+
+9. Ideas for iteration:
+ - New statistics field (both global and interval level).
+ - Radio buttons for timeline stats.
+ - Bar graph for external data by date.
+ - New data format:  
+    - TimeStamp
+        - stats (total_tweets, media_total, geo_total, optional_hashtag_count)
+        - tweets_geo: (geoJson w/ properties: tweet_url, media_native, media_external, geo_type)
+        - tweets_VIT: (set of tweet urls)
+    
