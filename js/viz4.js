@@ -181,7 +181,7 @@ function create_timeline(data,mapWidth,dateParsed){
     function mousemove() {                                 // **********
         if (typeof removalTag !== 'undefined') {
             d3.selectAll('.'+removalTag).transition()
-              .duration(500)
+              .duration(2000)
               .delay(0)
               .style("fill","steelblue")
               .style("fill-opacity",0.2)
