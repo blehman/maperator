@@ -36,9 +36,9 @@ body {
 }
 
 .line {
-  stroke: red;
+  stroke: steelblue;
   stroke-width: 2;
-  fill: #000;
+  fill: none;
 }
 
 #controls {

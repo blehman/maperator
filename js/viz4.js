@@ -32,8 +32,8 @@ function addPoints(x,map){
     if (x.value.hasOwnProperty("tweets")){
         x.value.tweets.features.forEach(function(d,i){
             var circle = L.circle([parseFloat(d.geometry.coordinate[1])+rand[0],parseFloat(d.geometry.coordinate[0])+rand[1]],300, {
-                color: 'red',
-                fillColor: '#f03',
+                color: 'steelblue',
+                fillColor: 'steelblue',
                 fillOpacity: 0.2,
                 className: "tweet_location_pre_data",
                 radius: 10
