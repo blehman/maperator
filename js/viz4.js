@@ -29,6 +29,10 @@ function getRandomArbitrary(min, max) {
 function addPoints(x,map){
 
     var rand = create_random_values()
+    var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
+    var dateParsed = parseDate(x.key);
+    var dateTag = dateParsed.toString().split(':')[0].replace(/ /g,'_');
+
     if (x.value.hasOwnProperty("tweets")){
         x.value.tweets.features.forEach(function(d,i){
             var circle = L.circle([parseFloat(d.geometry.coordinate[1])+rand[0],parseFloat(d.geometry.coordinate[0])+rand[1]],300, {
@@ -41,11 +45,12 @@ function addPoints(x,map){
 
             var circleData = d3.selectAll(".tweet_location_pre_data")
                 .classed("tweet_location_pre_data",false)
-                .classed("tweet_location",true)
+                .classed("tweet_location " + dateTag,true)
                 .attr("id","tweetID_"+d.properties.tweet.split('/')[5])
                 .attr("media",d.properties.link)
                 .attr("tweet",d.properties.tweet)
-                .attr("user",d.properties.user_id);
+                .attr("user",d.properties.user_id)
+                .attr("date",dateParsed);
         })
     };
 }
@@ -114,23 +119,29 @@ function create_timeline(data,mapWidth,dateParsed){
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    // transform date string into date object
     data.forEach(function(d) {
       if (!dateParsed){
           d.key = parseDate(d.key);
       }
       d.value = +d.value;
     });
+
+    // add range to scales
     x.domain(d3.extent(data, function(d) { return d.key; }));
     y.domain(d3.extent(data, function(d) { return d.value; }));
 
+    // create x axis
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
+    // append the circle at the intersection 
     var focus = svg.append("g")
         .style("display", "none");
 
+    // create conditional y axis
     if (windowHeight > 600){
       svg.append("g")
         .attr("class", "y axis")
@@ -144,7 +155,7 @@ function create_timeline(data,mapWidth,dateParsed){
         .text("Tweets");
     };
 
-    // 
+    // create timeline line
     svg.append("path")
       .datum(data)
       .attr("class", "line")
@@ -168,11 +179,29 @@ function create_timeline(data,mapWidth,dateParsed){
       .on("mousemove", mousemove);
 
     function mousemove() {                                 // **********
+        if (typeof removalTag !== 'undefined') {
+            d3.selectAll('.'+removalTag).transition()
+              .duration(500)
+              .delay(0)
+              .style("fill","steelblue")
+              .style("fill-opacity",0.2)
+              .style("stroke","steelblue")
+              .style("stroke-opacity",0.5)
+        }
         var x0 = x.invert(d3.mouse(this)[0]),              // **********
             i = bisectDate(data, x0, 1),                   // **********
             d0 = data[i - 1],                              // **********
             d1 = data[i],                                  // **********
             d = x0 - d0.key > d1.key - x0 ? d1 : d0;     // **********
+        var dateTag = (x0.toString()).split(':')[0].replace(/ /g,'_')
+
+        d3.selectAll('.'+dateTag)
+            .style("fill","red")
+            .style("fill-opacity",1)
+            .style("stroke","red")
+            .style("stroke-opacity",1);
+
+        removalTag = dateTag;
 
         focus.select("circle.y")                           // **********
             .attr("transform",                             // **********
@@ -191,6 +220,7 @@ d3.json("data/BoulderFlood_viewer.json", function(collection) {
     console.log(data)
   });
 */
+
   // build map and creat an svg.
   var map = build_map();
 
