@@ -35,10 +35,10 @@ body {
   shape-rendering: crispEdges;
 }
 
-.dot {
-  stroke: #000;
-  stroke-opacity: .7;
-  fill-opacity: .7;
+.line {
+  stroke: red;
+  stroke-width: 2;
+  fill: #000;
 }
 
 #controls {

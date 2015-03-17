@@ -31,11 +31,12 @@ function addPoints(x,map){
     var rand = create_random_values()
     if (x.value.hasOwnProperty("tweets")){
         x.value.tweets.features.forEach(function(d,i){
-            var circle = L.circle([parseFloat(d.geometry.coordinate[1])+rand[0],parseFloat(d.geometry.coordinate[0])+rand[1]], 500, {
+            var circle = L.circle([parseFloat(d.geometry.coordinate[1])+rand[0],parseFloat(d.geometry.coordinate[0])+rand[1]],300, {
                 color: 'red',
                 fillColor: '#f03',
                 fillOpacity: 0.2,
-                className: "tweet_location_pre_data"
+                className: "tweet_location_pre_data",
+                radius: 10
             }).addTo(map);
 
             var circleData = d3.selectAll(".tweet_location_pre_data")
@@ -51,7 +52,7 @@ function addPoints(x,map){
 
 
 function build_map(){
-    var map = L.map('map').setView([40.0274,-105.2519], 13);
+    var map = L.map('map').setView([40.0274,-105.2519],13);
     var stamen = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {attribution: 'dev.'}).addTo(map);
     var toolserver = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png');
     var baseLayers = {"stamen": stamen, "toolserver-mapnik":toolserver};
@@ -126,7 +127,7 @@ function create_timeline(data,mapWidth,dateParsed){
           .call(xAxis);
 
       if (windowHeight > 600){
-       svg.append("g")
+        svg.append("g")
           .attr("class", "y axis")
           .call(yAxis)
 
@@ -137,11 +138,10 @@ function create_timeline(data,mapWidth,dateParsed){
           .style("text-anchor", "end")
           .text("Tweets");
       };
-      svg.append("path")
+        svg.append("path")
           .datum(data)
           .attr("class", "line")
           .attr("d", line);
-
 }
 
 d3.json("data/BoulderFlood_viewer.json", function(collection) {
@@ -182,6 +182,5 @@ d3.json("data/BoulderFlood_viewer.json", function(collection) {
           d3.select(this).attr('tweet').split('/')[5],
           document.getElementById('tweet'))
   });
-
 });
 
