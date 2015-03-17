@@ -77,6 +77,8 @@ function create_timeline(data,mapWidth,dateParsed){
     d3.select("#timeline").selectAll("*").remove();
     var windowHeight = window.innerHeight
 
+    var bisectDate = d3.bisector(function(d) { return d.key; }).left;
+
     var margin = {top: windowHeight*0.1, right: 0, bottom: windowHeight*0.1, left: 50},
         width = mapWidth,
         height =  windowHeight*0.3 - margin.top - margin.bottom;
@@ -112,36 +114,71 @@ function create_timeline(data,mapWidth,dateParsed){
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      data.forEach(function(d) {
-        if (!dateParsed){
-            d.key = parseDate(d.key);
-        }
-        d.value = +d.value;
-      });
-      x.domain(d3.extent(data, function(d) { return d.key; }));
-      y.domain(d3.extent(data, function(d) { return d.value; }));
+    data.forEach(function(d) {
+      if (!dateParsed){
+          d.key = parseDate(d.key);
+      }
+      d.value = +d.value;
+    });
+    x.domain(d3.extent(data, function(d) { return d.key; }));
+    y.domain(d3.extent(data, function(d) { return d.value; }));
 
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    var focus = svg.append("g")
+        .style("display", "none");
+
+    if (windowHeight > 600){
       svg.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(0," + height + ")")
-          .call(xAxis);
+        .attr("class", "y axis")
+        .call(yAxis)
 
-      if (windowHeight > 600){
-        svg.append("g")
-          .attr("class", "y axis")
-          .call(yAxis)
+      svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Tweets");
+    };
 
-        svg.append("text")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 6)
-          .attr("dy", ".71em")
-          .style("text-anchor", "end")
-          .text("Tweets");
-      };
-        svg.append("path")
-          .datum(data)
-          .attr("class", "line")
-          .attr("d", line);
+    // 
+    svg.append("path")
+      .datum(data)
+      .attr("class", "line")
+      .attr("d", line);
+
+    // append the circle at the intersection 
+    focus.append("circle")
+      .attr("class", "y")
+      .style("fill", "none")
+      .style("stroke", "blue")
+      .attr("r", 4);
+
+    // append the rectangle to capture mouse
+    svg.append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .style("fill", "none")
+      .style("pointer-events", "all")
+      .on("mouseover", function() { focus.style("display", null); })
+      .on("mouseout", function() { focus.style("display", "none"); })
+      .on("mousemove", mousemove);
+
+    function mousemove() {                                 // **********
+        var x0 = x.invert(d3.mouse(this)[0]),              // **********
+            i = bisectDate(data, x0, 1),                   // **********
+            d0 = data[i - 1],                              // **********
+            d1 = data[i],                                  // **********
+            d = x0 - d0.key > d1.key - x0 ? d1 : d0;     // **********
+
+        focus.select("circle.y")                           // **********
+            .attr("transform",                             // **********
+                  "translate(" + x(d.key) + "," +         // **********
+                                 y(d.value) + ")");        // **********
+    }                                                      // **********
 }
 
 d3.json("data/BoulderFlood_viewer.json", function(collection) {
