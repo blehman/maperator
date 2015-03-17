@@ -33,5 +33,7 @@ South: 39.9088
  - [Simple random jitter](https://github.com/blehman/maperator/blob/master/js/viz4.js#L31)
 ![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/jitter.png)
 
-
-
+8. Learn how to dynamically update the map based on mouse's position in
+   the timeline.
+ - [Line graph tooltip] (http://bl.ocks.org/d3noob/e5daff57a04c2639125e)  
+![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/dynamicUpdating.png)
