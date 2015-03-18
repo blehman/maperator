@@ -209,15 +209,13 @@ function create_timeline(data,mapWidth,dateParsed){
               .style("stroke","steelblue")
               .style("stroke-opacity",0.5)
 
-        removalTag = dateTag;
-      
-
         // create red circles on timeline
         focus.append("circle")
           .attr("class","remover")
           .attr("cx",x(d.key))
           .attr("cy",y(d.value))
           .attr("fill","red")
+          .style("fill-opacity",0.1)
           .attr("r",8)
           .transition()
             .duration(1000)
