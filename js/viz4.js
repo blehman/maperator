@@ -166,7 +166,16 @@ function create_timeline(data,mapWidth,dateParsed){
       .attr("class", "y")
       .style("fill", "none")
       .style("stroke", "blue")
+      .style("stroke-width",2)
       .attr("r", 4);
+
+    // append moving red circle to timeline at the intersection 
+    focus.append("circle")
+      .attr("class", "y")
+      .style("fill", "none")
+      .style("stroke", "red")
+      .style("stroke-width",2)
+      .attr("r", 8)
 
     // append the rectangle to capture mouse
     svg.append("rect")
@@ -179,15 +188,6 @@ function create_timeline(data,mapWidth,dateParsed){
       .on("mousemove", mousemove);
 
     function mousemove() {                                 // **********
-        if (typeof removalTag !== 'undefined') {
-            d3.selectAll('.'+removalTag).transition()
-              .duration(2000)
-              .delay(0)
-              .style("fill","steelblue")
-              .style("fill-opacity",0.2)
-              .style("stroke","steelblue")
-              .style("stroke-opacity",0.5)
-        }
         var x0 = x.invert(d3.mouse(this)[0]),              // **********
             i = bisectDate(data, x0, 1),                   // **********
             d0 = data[i - 1],                              // **********
@@ -195,19 +195,42 @@ function create_timeline(data,mapWidth,dateParsed){
             d = x0 - d0.key > d1.key - x0 ? d1 : d0;     // **********
         var dateTag = (x0.toString()).split(':')[0].replace(/ /g,'_')
 
+        // color circles on map w/ corresponding date
         d3.selectAll('.'+dateTag)
             .style("fill","red")
             .style("fill-opacity",1)
             .style("stroke","red")
-            .style("stroke-opacity",1);
+            .style("stroke-opacity",1)
+            .transition()
+              .duration(2000)
+              .delay(0)
+              .style("fill","steelblue")
+              .style("fill-opacity",0.2)
+              .style("stroke","steelblue")
+              .style("stroke-opacity",0.5)
 
         removalTag = dateTag;
+      
 
-        focus.select("circle.y")                           // **********
-            .attr("transform",                             // **********
-                  "translate(" + x(d.key) + "," +         // **********
-                                 y(d.value) + ")");        // **********
-    }                                                      // **********
+        // create red circles on timeline
+        focus.append("circle")
+          .attr("class","remover")
+          .attr("cx",x(d.key))
+          .attr("cy",y(d.value))
+          .attr("fill","red")
+          .attr("r",8)
+          .transition()
+            .duration(1000)
+            .delay(0)
+            .remove()
+
+        // move the circles at intersection
+        focus.selectAll("circle.y")
+            .attr("transform",
+                  "translate(" + x(d.key) + "," + y(d.value) + ")");
+
+
+    }
 }
 
 d3.json("data/BoulderFlood_viewer.json", function(collection) {
