@@ -165,7 +165,7 @@ function create_timeline(data,mapWidth,dateParsed){
     focus.append("circle")
       .attr("class", "y")
       .style("fill", "none")
-      .style("stroke", "blue")
+      .style("stroke", "steelblue")
       .style("stroke-width",2)
       .attr("r", 4);
 
@@ -173,7 +173,7 @@ function create_timeline(data,mapWidth,dateParsed){
     focus.append("circle")
       .attr("class", "y")
       .style("fill", "none")
-      .style("stroke", "red")
+      .style("stroke", "steelblue")
       .style("stroke-width",2)
       .attr("r", 8)
 
