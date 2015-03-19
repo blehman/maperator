@@ -39,8 +39,8 @@ South: 39.9088
 ![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/dynamicUpdating.png)
 
 9. Learn how to embed photos from instagram.
- - [Ask a question on StackOverflow](http://stackoverflow.com/questions/29133104/using-instagrams-oembed-with-d3)
- - [Create a work-around](https://instagram.com/developer/embedding/#media_redirect)
+ - [Ask a question on StackOverflow](http://stackoverflow.com/questions/29133104/using-instagrams-oembed-with-d3#question)
+ - [Create a work-around](http://stackoverflow.com/questions/29133104/using-instagrams-oembed-with-d3#answer-29139135)
 ![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/instagram.png)
 
 
