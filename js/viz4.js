@@ -39,7 +39,7 @@ function addPoints(x,map){
 
     if (x.value.hasOwnProperty("tweets")){
         x.value.tweets.features.forEach(function(d,i){
-            var circle = L.circle([parseFloat(d.geometry.coordinate[1])+rand[0],parseFloat(d.geometry.coordinate[0])+rand[1]],100, {
+            var circle = L.circle([parseFloat(d.geometry.coordinate[1])+rand[0],parseFloat(d.geometry.coordinate[0])+rand[1]],200, {
                 color: 'steelblue',
                 fillColor: 'steelblue',
                 fillOpacity: 0.2,
