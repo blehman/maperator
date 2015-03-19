@@ -38,7 +38,13 @@ South: 39.9088
  - [Line graph tooltip] (http://bl.ocks.org/d3noob/e5daff57a04c2639125e)  
 ![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/dynamicUpdating.png)
 
-9. Ideas for iteration:
+9. Learn how to embed photos from instagram.
+ - [Ask a question on StackOverflow](http://stackoverflow.com/questions/29133104/using-instagrams-oembed-with-d3)
+ - [Create a work-around](https://instagram.com/developer/embedding/#media_redirect)
+![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/instagram.png)
+
+
+10. Ideas for iteration:
  - New statistics field (both global and interval level).
  - Radio buttons for timeline stats.
  - Bar graph for external data by date.
