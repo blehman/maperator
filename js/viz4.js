@@ -1,43 +1,50 @@
 function set_values(timelineData,dateParsed){
-  var mapWidth = window.innerWidth * 0.5
-  var mapHeight = window.innerHeight * 0.8
-  var tweetLeftMargin = (mapWidth + 80) + 'px'
-  var tweetTopMargin = (-(window.innerHeight)+33)+'px'
+    // adjusts the location of elements and timeline
 
-  d3.select('#photo')
-    .style("margin-left",tweetLeftMargin)
-    .style("margin-top",tweetTopMargin+80);
+    var mapWidth = window.innerWidth * 0.5
+    var mapHeight = window.innerHeight * 0.8
+    var tweetLeftMargin = (mapWidth + 80) + 'px'
+    var tweetTopMargin = (-(window.innerHeight)+33)+'px'
 
-  d3.select("#tweet")
-    .style("margin-left",tweetLeftMargin)
-    .style("margin-top",tweetTopMargin);
+    d3.select('#photo')
+      .style("margin-left",tweetLeftMargin)
+      .style("margin-top",tweetTopMargin+80);
 
-  d3.select('#map')
-    .attr('width',mapWidth)
-    .attr('height',mapHeight);
+    d3.select("#tweet")
+      .style("margin-left",tweetLeftMargin)
+      .style("margin-top",tweetTopMargin);
 
-  // Create timeline
-  //console.log(["create_timeline",create_timeline]);
-  create_timeline(timelineData,mapWidth,dateParsed);
+    d3.select('#map')
+      .attr('width',mapWidth)
+      .attr('height',mapHeight);
+
+    // Create timeline
+    create_timeline(timelineData,mapWidth,dateParsed);
 
 }
 
 function create_random_values(){
+    // used to jitter points
+
     var num = 0.05
     return [getRandomArbitrary(-num,num),getRandomArbitrary(-num,num)]
 }
 function getRandomArbitrary(min, max) {
-  return Math.random() * (max - min) + min;
+    return Math.random() * (max - min) + min;
 }
 
 function addPoints(x,map){
+    // adds geo as circles to map
 
-    var rand = create_random_values()
+    var rand = create_random_values();
     var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
     var dateParsed = parseDate(x.key);
+
+    // dateTag is used to class each tweet in a time bucket - currently hardcoded for the hourly bucket
     var dateTag = dateParsed.toString().split(':')[0].replace(/ /g,'_');
 
     if (x.value.hasOwnProperty("tweets")){
+        // checks to see if the times series contains tweet data and then uses geo to create circle on map
         x.value.tweets.features.forEach(function(d,i){
             var circle = L.circle([parseFloat(d.geometry.coordinate[1])+rand[0],parseFloat(d.geometry.coordinate[0])+rand[1]],200, {
                 color: 'steelblue',
@@ -47,6 +54,7 @@ function addPoints(x,map){
                 radius: 1
             }).addTo(map);
 
+            // adds data to each circle
             var circleData = d3.selectAll(".tweet_location_pre_data")
                 .classed("tweet_location_pre_data",false)
                 .classed("tweet_location " + dateTag,true)
@@ -60,6 +68,8 @@ function addPoints(x,map){
 }
 
 function build_map(){
+    // uses leaflet.js to build a zoomable map
+
     var map = L.map('map').setView([40.0274,-105.2519],13);
     var stamen = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {attribution: 'dev.'}).addTo(map);
     var toolserver = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png');
@@ -69,6 +79,7 @@ function build_map(){
 }
 
 function create_timeline_data(dataArray){
+
     var data = {};
     dataArray.forEach(function(d,i){
         if (d.value.hasOwnProperty("tweets")){
@@ -83,7 +94,7 @@ function create_timeline_data(dataArray){
 function create_timeline(data,mapWidth,dateParsed){
     // remove old timeline
     d3.select("#timeline").selectAll("*").remove();
-    var windowHeight = window.innerHeight
+    var windowHeight = window.innerHeight;
 
     var bisectDate = d3.bisector(function(d) { return d.key; }).left;
 
@@ -190,12 +201,15 @@ function create_timeline(data,mapWidth,dateParsed){
       .on("mouseout", function() { focus.style("display", "none"); })
       .on("mousemove", mousemove);
 
-    function mousemove() {                                 // **********
-        var x0 = x.invert(d3.mouse(this)[0]),              // **********
-            i = bisectDate(data, x0, 1),                   // **********
-            d0 = data[i - 1],                              // **********
-            d1 = data[i],                                  // **********
-            d = x0 - d0.key > d1.key - x0 ? d1 : d0;     // **********
+    function mousemove() {
+        // x0 is the x-coordinate associated with the mouse location on the timeline
+        var x0 = x.invert(d3.mouse(this)[0]),
+            i = bisectDate(data, x0, 1),
+            d0 = data[i - 1],
+            d1 = data[i],
+            d = x0 - d0.key > d1.key - x0 ? d1 : d0;
+
+        // dateTag needs to be reconsidered - the split hardcodes hourly buckets
         var dateTag = (x0.toString()).split(':')[0].replace(/ /g,'_')
 
         // color circles on map w/ corresponding date
@@ -225,50 +239,12 @@ function create_timeline(data,mapWidth,dateParsed){
             .delay(0)
             .remove()
 
-        // move the circles at intersection
+        // move the circles at intersection of mouse w/ timeline x-axis
         focus.selectAll("circle.y")
             .attr("transform",
                   "translate(" + x(d.key) + "," + y(d.value) + ")");
     }
 }
-
-// d3.jsonp code from https://github.com/d3/d3-plugins/tree/master/jsonp
-
-d3.jsonp = function (url, callback) {
-  function rand() {
-    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
-      c = '', i = -1;
-    while (++i < 15) c += chars.charAt(Math.floor(Math.random() * 52));
-    return c;
-  }
-
-  function create(url) {
-    var e = url.match(/callback=d3.jsonp.(\w+)/),
-      c = e ? e[1] : rand();
-    d3.jsonp[c] = function(data) {
-      callback(data);
-      delete d3.jsonp[c];
-      script.remove();
-    };
-    return 'd3.jsonp.' + c;
-  }
-
-  var cb = create(url),
-    script = d3.select('head')
-    .append('script')
-    .attr('type', 'text/javascript')
-    .attr('src', url.replace(/(\{|%7B)callback(\}|%7D)/, cb));
-};
-
-function fuckJsonP(instaG) {
-       d3.select('.photo').remove();
-
-       d3.select("body")
-          .append('div')
-            .classed('photo',true)
-            .html(instaG.html);
-};
-
 
 d3.json("data/BoulderFlood_viewer.json", function(collection) {
   console.log(["collection:",collection])
@@ -279,7 +255,10 @@ d3.json("data/BoulderFlood_viewer.json", function(collection) {
   // Transform object to array
   var dataArray = d3.entries(collection.time_series.interval_data);
   var timelineData = create_timeline_data(dataArray)
-  var dateParsed = false
+
+  // insure that once the date strings become date objects, they do not get parsed again.
+  var dateParsed = false;
+
   // Initialize map & tweet orientation.
   set_values(timelineData,dateParsed);
 
@@ -296,18 +275,20 @@ d3.json("data/BoulderFlood_viewer.json", function(collection) {
   var circles = d3.selectAll(".tweet_location")
 
   circles.on("mouseover",function(event){
+
+      // removes old embeded tweet
       var element = d3.select(this)
       d3.select("#tweet").selectAll("*").remove();
 
+      // adds new embeded tweet
       twttr.widgets.createTweet(
           element.attr('tweet').split('/')[5],
           document.getElementById('tweet')
       );
 
       if (element.attr("media").match("instagram.com") != null){
+          // embeds instagram photo
           d3.select('#photo').attr('src','http://instagram.com/p/' + element.attr("media").split('/')[4] +'/media/?size=l');
-          console.log(element.attr("media").split('/')[4])
-          //d3.jsonp("http://api.instagram.com/oembed?OMITSCRIPT=true&HIDECAPTION=true&url="+element.attr("media")+"&callback=fuckJsonP");
       }
   });
 });
