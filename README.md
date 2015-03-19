@@ -41,7 +41,7 @@ South: 39.9088
 9. Learn how to embed photos from instagram.
  - [It looks "simple"](https://instagram.com/developer/embedding/#)
  - [Asked a StackOverflow question](http://stackoverflow.com/questions/29133104/using-instagrams-oembed-with-d3#question)
- - [Create work-around](http://stackoverflow.com/questions/29133104/using-instagrams-oembed-with-d3#answer-29139135)
+ - [Created a work-around](http://stackoverflow.com/questions/29133104/using-instagrams-oembed-with-d3#answer-29139135)
 ![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/instagram.png)
 
 
