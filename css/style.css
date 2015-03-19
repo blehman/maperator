@@ -52,4 +52,9 @@ input {
   margin: 4px 4px 0;
 }
 
+#photo {
+  border: 2px solid;
+  border-radius: 25px;
+}
+
 

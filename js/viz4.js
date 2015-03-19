@@ -4,13 +4,17 @@ function set_values(timelineData,dateParsed){
   var tweetLeftMargin = (mapWidth + 80) + 'px'
   var tweetTopMargin = (-(window.innerHeight)+33)+'px'
 
+  d3.select('#photo')
+    .style("margin-left",tweetLeftMargin)
+    .style("margin-top",tweetTopMargin+80);
+
   d3.select("#tweet")
     .style("margin-left",tweetLeftMargin)
-    .style("margin-top",tweetTopMargin)
+    .style("margin-top",tweetTopMargin);
 
   d3.select('#map')
     .attr('width',mapWidth)
-    .attr('height',mapHeight)
+    .attr('height',mapHeight);
 
   // Create timeline
   //console.log(["create_timeline",create_timeline]);
@@ -35,15 +39,13 @@ function addPoints(x,map){
 
     if (x.value.hasOwnProperty("tweets")){
         x.value.tweets.features.forEach(function(d,i){
-            var circle = L.circle([parseFloat(d.geometry.coordinate[1])+rand[0],parseFloat(d.geometry.coordinate[0])+rand[1]],300, {
+            var circle = L.circle([parseFloat(d.geometry.coordinate[1])+rand[0],parseFloat(d.geometry.coordinate[0])+rand[1]],100, {
                 color: 'steelblue',
                 fillColor: 'steelblue',
                 fillOpacity: 0.2,
                 className: "tweet_location_pre_data",
-                radius: 10
+                radius: 1
             }).addTo(map);
-
-            var output d3.jsonp("http://api.instagram.com/oembed?url="+d.properties.link+"&callback=fuckJsonP")
 
             var circleData = d3.selectAll(".tweet_location_pre_data")
                 .classed("tweet_location_pre_data",false)
@@ -56,7 +58,6 @@ function addPoints(x,map){
         })
     };
 }
-
 
 function build_map(){
     var map = L.map('map').setView([40.0274,-105.2519],13);
@@ -139,7 +140,7 @@ function create_timeline(data,mapWidth,dateParsed){
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
-    // append the circle at the intersection 
+    // append the circle at the intersection
     var focus = svg.append("g")
         .style("display", "none");
 
@@ -163,7 +164,7 @@ function create_timeline(data,mapWidth,dateParsed){
       .attr("class", "line")
       .attr("d", line);
 
-    // append the circle at the intersection 
+    // append the circle at the intersection
     focus.append("circle")
       .attr("class", "y")
       .style("fill", "none")
@@ -171,7 +172,7 @@ function create_timeline(data,mapWidth,dateParsed){
       .style("stroke-width",2)
       .attr("r", 4);
 
-    // append moving red circle to timeline at the intersection 
+    // append moving red circle to timeline at the intersection
     focus.append("circle")
       .attr("class", "y")
       .style("fill", "none")
@@ -228,8 +229,6 @@ function create_timeline(data,mapWidth,dateParsed){
         focus.selectAll("circle.y")
             .attr("transform",
                   "translate(" + x(d.key) + "," + y(d.value) + ")");
-
-
     }
 }
 
@@ -261,19 +260,18 @@ d3.jsonp = function (url, callback) {
     .attr('src', url.replace(/(\{|%7B)callback(\}|%7D)/, cb));
 };
 
-function fuckJsonP(datas) { console.log(datas);}
+function fuckJsonP(instaG) {
+       d3.select('.photo').remove();
+
+       d3.select("body")
+          .append('div')
+            .classed('photo',true)
+            .html(instaG.html);
+};
 
 
 d3.json("data/BoulderFlood_viewer.json", function(collection) {
   console.log(["collection:",collection])
-
-// Enventually: render photos
-/*  d3.json("http://api.instagram.com/oembed?url=http://instagr.am/p/fA9uwTtkSN/",function(error, json) {
-    if (error) return console.warn(error);
-    data = json;
-    console.log(data)
-  });
-*/
 
   // build map and creat an svg.
   var map = build_map();
@@ -298,10 +296,19 @@ d3.json("data/BoulderFlood_viewer.json", function(collection) {
   var circles = d3.selectAll(".tweet_location")
 
   circles.on("mouseover",function(event){
+      var element = d3.select(this)
       d3.select("#tweet").selectAll("*").remove();
+
       twttr.widgets.createTweet(
-          d3.select(this).attr('tweet').split('/')[5],
-          document.getElementById('tweet'))
+          element.attr('tweet').split('/')[5],
+          document.getElementById('tweet')
+      );
+
+      if (element.attr("media").match("instagram.com") != null){
+          d3.select('#photo').attr('src','http://instagram.com/p/' + element.attr("media").split('/')[4] +'/media/?size=l');
+          console.log(element.attr("media").split('/')[4])
+          //d3.jsonp("http://api.instagram.com/oembed?OMITSCRIPT=true&HIDECAPTION=true&url="+element.attr("media")+"&callback=fuckJsonP");
+      }
   });
 });
 
