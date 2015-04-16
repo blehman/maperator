@@ -43,12 +43,12 @@ function addPoints(x,map){
     // dateTag is used to class each tweet in a time bucket - currently hardcoded for the hourly bucket
     var dateTag = dateParsed.toString().split(':')[0].replace(/ /g,'_');
 
-    if (x.value.hasOwnProperty("tweets")){
+    if (x.value.hasOwnProperty("tweets_geo")){
         // checks to see if the times series contains tweet data and then uses geo to create circle on map
-        x.value.tweets.features.forEach(function(d,i){
-            var circle = L.circle([parseFloat(d.geometry.coordinate[1])+rand[0],parseFloat(d.geometry.coordinate[0])+rand[1]],200, {
-                color: 'steelblue',
-                fillColor: 'steelblue',
+        x.value.tweets_geo.features.forEach(function(d,i){
+            var circle = L.circle([parseFloat(d.geometry.coordinates[1]),parseFloat(d.geometry.coordinates[0])],100, {
+                color: 'grey',
+                fillColor: 'grey',
                 fillOpacity: 0.2,
                 className: "tweet_location_pre_data",
                 radius: 1
@@ -58,10 +58,9 @@ function addPoints(x,map){
             var circleData = d3.selectAll(".tweet_location_pre_data")
                 .classed("tweet_location_pre_data",false)
                 .classed("tweet_location " + dateTag,true)
-                .attr("id","tweetID_"+d.properties.tweet.split('/')[5])
-                .attr("media",d.properties.link)
-                .attr("tweet",d.properties.tweet)
-                .attr("user",d.properties.user_id)
+                .attr("id","tweetID_"+d.properties.tweet_url.split('/')[5])
+                .attr("media",d.properties.media)
+                .attr("tweet",d.properties.tweet_url)
                 .attr("date",dateParsed);
         })
     }
@@ -82,8 +81,8 @@ function create_timeline_data(dataArray){
 
     var data = {};
     dataArray.forEach(function(d,i){
-        if (d.value.hasOwnProperty("tweets")){
-            data[d.key] = d.value.tweets.features.length
+        if (d.value.hasOwnProperty("tweets_geo")){
+            data[d.key] = d.value.tweets_geo.features.length
         }else{
             data[d.key] = 0
         }
@@ -265,9 +264,9 @@ function create_timeline(data,mapWidth,dateParsed){
               var lowExtent = new Date(brush.extent()[0]),
                   highExtent  = new Date(brush.extent()[1]);
               if (lowExtent <= checkDate && checkDate <= highExtent) {
-                d3.select(this).style({fill: "green", stroke: "lightgreen"});
+                d3.select(this).style({fill: "red", stroke: "red"});
               } else {
-                d3.select(this).style({fill: "steelblue", stroke: "steelblue"});
+                d3.select(this).style({fill: "grey", stroke: "grey"});
               }
 
         })
@@ -288,7 +287,7 @@ function create_timeline(data,mapWidth,dateParsed){
     }
 }
 
-d3.json("data/BoulderFlood_viewer.json", function(collection) {
+d3.json("data/event_viewer.json", function(collection) {
   console.log(["collection:",collection])
 
   // build map and creat an svg.
@@ -321,17 +320,18 @@ d3.json("data/BoulderFlood_viewer.json", function(collection) {
       // removes old embeded tweet
       var element = d3.select(this)
       d3.select("#tweet").selectAll("*").remove();
+      d3.select("#photo").selectAll("*").remove();
 
       // adds new embeded tweet
       twttr.widgets.createTweet(
           element.attr('tweet').split('/')[5],
           document.getElementById('tweet')
       );
-
-      if (element.attr("media").match("instagram.com") != null){
-          // embeds instagram photo
-          d3.select('#photo').attr('src','http://instagram.com/p/' + element.attr("media").split('/')[4] +'/media/?size=l');
+      if (element.attr("media")) {
+        if (element.attr("media").match("instagram.com") != null){
+            // embeds instagram photo
+            d3.select('#photo').attr('src','http://instagram.com/p/' + element.attr("media").split('/')[4] +'/media/?size=l');
       }
+    }
   });
 });
-
