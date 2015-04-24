@@ -1,0 +1,118 @@
+{
+  "stats": {
+    "count_geo_taggged_with_media": 3435,
+    "count_geo_taggged": 9219
+  },
+  "time_series": {
+    "metadata": {
+      "time_start": "2013-09-11 00:00:00",
+      "time_end": "2013-09-18 00:00:00",
+      "interval_minutes": 60,
+      "time_format": "YYYY-MM-DD HH:mm:ss",
+      "tz": "UTC",
+      "tz_offset": 0
+    },
+    "interval_data": {
+      "2013-09-13 13:00:00": {
+        "tweets_geo": {
+          "type": "FeatureCollection",
+          "features": [
+            {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -104.59100000000001,
+                38.2662505
+              ]
+            },
+            "properties": {
+              "tweet_url": "twitter.com/BrianLehman/status/587295292418039808",
+              "geo_type": "tweet_geo"
+            }
+          },
+          {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                "-104.985",
+                "39.7392"
+              ]
+            },
+            "properties": {
+              "tweet_url": "twitter.com/BrianLehman/status/575205630824181760",
+              "geo_type": "profile_geo",
+              "media": "http://www.thedenverchannel.com/weather/town-of-lyons-in-boulder-county-isolated-by-flood-waters-sheriff-reports,http://twitter.com/7NewsNOW/status/378485198255431681/photo/1"
+            }
+          }
+          ]
+        },
+        "tweets_vit": [
+          {
+          "tweet_url": "http://twitter.com/BoulderOEM/statuses/378482634080669696"
+        },
+        {
+          "tweet_url": "http://twitter.com/BoulderOEM/statuses/378483235791310848",
+          "media": "http://boulderoem.com/emergency-status"
+        }
+        ],
+        "stats": {
+          "tweets_geo_all": 60,
+          "tweets_geo": 28,
+          "tweets_profile": 32
+        }
+      },
+    "2013-09-13 14:00:00": {
+        "tweets_geo": {
+          "type": "FeatureCollection",
+          "features": [
+            {
+              "type": "Feature",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -105.5540005,
+                  38.9979
+                ]
+              },
+              "properties": {
+                "tweet_url": "twitter.com/BrianLehman/status/587305537726971904",
+                "geo_type": "tweet_geo"
+              }
+            },
+            {
+              "type": "Feature",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  -105.2400015,
+                  40.0293505
+                ]
+              },
+              "properties": {
+                "tweet_url": "twitter.com/BrianLehman/status/586770153926295554",
+                "geo_type": "tweet_geo"
+              }
+            }
+          ]
+        },
+        "tweets_vit": [
+          {
+            "tweet_url": "http://twitter.com/BoulderOEM/statuses/380090193929588736",
+            "media": "http://boulderoem.com/emergency-status/497-9-17-2013-4-00pm-public-health-advisory"
+          },
+          {
+            "tweet_url": "http://twitter.com/BoulderOEM/statuses/380093302185680896",
+            "media": "http://www.bouldercounty.org/env/water/pages/wnv.aspx"
+          }
+        ],
+        "stats": {
+          "tweets_geo_all": 47,
+          "tweets_geo": 21,
+          "tweets_profile": 26
+        }
+    }
+    }
+  }
+}
