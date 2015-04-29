@@ -18,9 +18,10 @@ body {
 #map {
     width: 50%;
     height: 70%;
-    left: 50px;
-    top: 50px;
+    left: 2%;
+    top: 5%;
     border: 2px solid;
+    position: absolute;
 }
 
 #tweet {
