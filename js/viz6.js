@@ -11,7 +11,7 @@ function set_values(timelineData,dateParsed){
       .style("margin-top",tweetTopMargin+80);
 
     d3.select("#tweet")
-      .style("margin-left",tweetLeftMargin)
+      .style("left",tweetLeftMargin+100)
       .style("margin-top",tweetTopMargin);
 
     d3.select('#map')
@@ -287,6 +287,7 @@ function build_map(){
 }
 
 function set_sizes(){
+    console.log('setting sizes')
 
     // keep all window sizes in scope
     var windowHeight = +window.innerHeight;
@@ -296,28 +297,41 @@ function set_sizes(){
     var margin = {top: windowHeight*0.01, right: 0, bottom: windowHeight*0.1, left: windowWidth*0.10};
 
     var sizes = {
-            mapWidth: "40%"
-            , mapHeight: "50%"
-            , timelineWidth: windowWidth * 0.37
-            , timelineHeight: windowHeight * 0.2
+            mapWidth: 0.36 * windowWidth
+            , mapHeight: 0.40 * windowHeight
+            , timelineWidth: 0.36 * windowWidth
+            , timelineHeight: 0.20 * windowHeight
             , timelineMarginLeft: (windowWidth * 0.02)+35
             , timelineMarginTop: (windowHeight * 0.5)+ (windowHeight * 0.1)
             , width: windowWidth * 0.8
             , height: windowHeight*0.3 - margin.top - margin.bottom
             , tweetTopMargin: margin.top
             , margin: margin
+            , left: 4
+            , top: 5
             , windowHeight: windowHeight
             , windowWidth: windowWidth
       };
 
+    // adjust map
     d3.select('#map')
       .style('width',sizes.mapWidth)
-      .style('height',sizes.mapHeight);
+      .style('height',sizes.mapHeight)
+      .style('top',sizes.top);
 
-    d3.select('#timeline')
-      .style('width',sizes.windowWidth)
-      .style('height',sizes.windowHeight);
+    // adjust timeline
+    d3.select('.volume')
+      .style('width',sizes.timelineWidth)
+      .style('height',sizes.timelineHeight);
 
+    // adjust tweet
+    d3.select('#tweet')
+      .style('left',(sizes.mapWidth+sizes.left))
+      .style('top',sizes.top+'%');
+
+    // adjust photo
+    d3.select('#photo')
+      .style('left',(sizes.mapWidth+sizes.left)+'%');
     //d3.select('.volume')
     //  .style('width',sizes.timelineWidth)
     //  .attr("transform", "translate(" + sizes.windowWidth * 0.05 + "," +150+ ")");
@@ -421,6 +435,19 @@ function add_features_to_map(timeStamp,features,map){
     });
 }
 
+function add_longlat_to_map(timeStamp,features,map,geoLayer){
+
+    // add features to the map
+    features.forEach(function(feature,i){
+        //var feature["timeStamp"] = timeStamp;
+        //var feature["timeStamp_str"] = timeStamp.toString();
+
+        // add points to map try to do this directly w/ geoJson
+        geoLayer.addData(feature);
+    });
+}
+
+
 
 function convert_to_array(data,map){
 
@@ -430,11 +457,17 @@ function convert_to_array(data,map){
     // function for parsing dates
     var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
 
+    // create empty layer to add points
+    var geoLayer = L.geoJson().addTo(map)
+
     // parse dates and coerce values
     function iterate_(dataArray){
         parsedDataArray = [];
         dataArray.forEach(function(ts) {
-            add_features_to_map(ts.key,ts.value.tweets_geo.features,map);
+
+          //console.log(ts.value.tweets_geo.features)
+            //add_features_to_map(ts.key,ts.value.tweets_geo.features,map);
+            //add_longlat_to_map(ts.key,ts.value.tweets_geo.features,map,geoLayer);
 
             // create timeline data
             parsedDataArray.push({
@@ -449,7 +482,66 @@ function convert_to_array(data,map){
     return iterate_(dataArray);
 }
 
+function decimal_count(num) {
+  return (num.split('.')[1] || []).length;
+}
 
+function add_points_to_map(data,map){
+    var dateArray = Object.keys(data.time_series.interval_data);
+    var point_counts = {};
+    dateArray.forEach(function(ts){
+        data.time_series.interval_data[ts].tweets_geo.features.forEach(function(feature){
+
+            // get geo
+            var longitude = feature.geometry.coordinates[0];
+            var latitude  = feature.geometry.coordinates[1];
+            var tweetUrl = feature.properties.tweet_url;
+            var tweetID = feature.properties.tweet_url.split('/')[5];
+
+            // remove this if block once the geo is corrected
+            if (decimal_count(latitude.toString())>4 & decimal_count(longitude.toString())>4){
+
+                // Use leaflet to add circles to the map
+                L.circle([+latitude,+longitude],35,{
+                    color: 'steelblue',
+                    fillColor: 'steelblue',
+                    fillOpacity: 0.2,
+                    className: "tweet_location_pre_data",
+                    //radius: 15
+                }).addTo(map);
+
+                // add data to circles
+                d3.select(".tweet_location_pre_data")
+                  .classed("tweet_location_pre_data",false)
+                  .classed("tweet_location",true)
+                  .classed("tweetID_"+tweetID,true)
+                  .attr("tweet_url",tweetUrl)
+                  .attr("tweetID",tweetID)
+                  .attr("timeStamp",ts)
+                  .attr("timeStampTag",ts.split(":")[0]);
+
+               if (feature.properties.hasOwnProperty("media")){
+                 // add media to circle
+                  d3.select(".tweetID_"+tweetID)
+                    .attr('media',feature.properties.media)
+               }
+            }
+
+        });
+    })
+    // sort points
+    var sorted_keys = Object.keys(point_counts).sort(function(a,b){return point_counts[b]-point_counts[a]})
+
+    //output={};
+    output=[];
+
+    sorted_keys.forEach(function(name){
+        output.push({name:point_counts[name]})
+        //output[d]=point_counts[d]
+    })
+    console.log(output)
+
+}
 //d3.json("data/BoulderFlood_viewer.json", function(collection) {
 d3.json("data/event_viewer.json", function(collection) {
     console.log(["collection:",collection])
@@ -465,12 +557,11 @@ d3.json("data/event_viewer.json", function(collection) {
     console.log(timelineData);
     create_timeline2(timelineData,sizes);
 
-
     // add point to map
-    
+    add_points_to_map(collection,map);
 
   // Transform object to array
-  
+
   //var dataArray = d3.entries(collection.time_series.interval_data);
   //var timelineData = create_timeline_data(dataArray)
 
@@ -502,7 +593,7 @@ d3.json("data/event_viewer.json", function(collection) {
 
       // adds new embeded tweet
       twttr.widgets.createTweet(
-          element.attr('tweet').split('/')[5],
+          element.attr('tweetID'),
           document.getElementById('tweet')
       );
 
@@ -510,6 +601,8 @@ d3.json("data/event_viewer.json", function(collection) {
           // embeds instagram photo
           d3.select('#photo').attr('src','http://instagram.com/p/' + element.attr("media").split('/')[4] +'/media/?size=l');
       }
+
+      var sizes = set_sizes();
   });
 });
 
