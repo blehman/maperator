@@ -24,6 +24,12 @@ body {
     position: absolute;
 }
 
+#tweets {
+    position: relative;
+    margin-top: "-1000px";
+    height: 200px;
+    overflow: auto;
+}
 .axis path,
 .axis line {
   fill: none;
@@ -53,13 +59,14 @@ input {
 }
 
 .brushElement .extent {
-  stroke: #fff;
+  stroke: #red;
   fill-opacity: .125;
   shape-rendering: crispEdges;
 }
 
-.resize {
+.resize rect {
   stroke: #111;
   fill: #111;
+  
 }
 
