@@ -283,42 +283,45 @@ function add_points_to_map(data,map){
     var dateArray = Object.keys(data.time_series.interval_data);
     var point_counts = {};
     dateArray.forEach(function(ts){
-        data.time_series.interval_data[ts].tweets_geo.features.forEach(function(feature){
+        if (data.time_series.interval_data[ts].hasOwnProperty("tweets_geo")){
+            data.time_series.interval_data[ts].tweets_geo.features.forEach(function(feature){
 
-            // get geo
-            var longitude = feature.geometry.coordinates[0];
-            var latitude  = feature.geometry.coordinates[1];
-            var tweetUrl = feature.properties.tweet_url;
-            var tweetID = feature.properties.tweet_url.split('/')[5];
+                // get geo
+                var longitude = feature.geometry.coordinates[0];
+                var latitude  = feature.geometry.coordinates[1];
+                var tweetUrl = feature.properties.tweet_url;
+                var tweetID = feature.properties.tweet_url.split('/')[5];
 
-            // remove this if block once the geo is corrected
-            if (decimal_count(latitude.toString())>4 & decimal_count(longitude.toString())>4){
+                // remove this if block once the geo is corrected
+                if (decimal_count(latitude.toString())>4 & decimal_count(longitude.toString())>4){
 
-                // Use leaflet to add circles to the map
-                L.circle([+latitude,+longitude],130,{
-                    color: 'steelblue',
-                    fillColor: 'steelblue',
-                    fillOpacity: 0.2,
-                    className: "tweet_location_pre_data"
-                }).addTo(map);
+                    // Use leaflet to add circles to the map
+                    L.circleMarker([+latitude,+longitude],{
+                        color: 'steelblue',
+                        fillColor: 'steelblue',
+                        fillOpacity: 0.2,
+                        radius:10,
+                        className: "tweet_location_pre_data"
+                    }).addTo(map);
 
-                // add data to circles
-                d3.select(".tweet_location_pre_data")
-                  .classed("tweet_location_pre_data",false)
-                  .classed("tweet_location",true)
-                  .classed("tweetID_"+tweetID,true)
-                  .attr("tweet_url",tweetUrl)
-                  .attr("tweetID",tweetID)
-                  .attr("timeStamp",ts)
-                  .attr("timeStampTag",ts.split(":")[0]);
+                    // add data to circles
+                    d3.select(".tweet_location_pre_data")
+                      .classed("tweet_location_pre_data",false)
+                      .classed("tweet_location",true)
+                      .classed("tweetID_"+tweetID,true)
+                      .attr("tweet_url",tweetUrl)
+                      .attr("tweetID",tweetID)
+                      .attr("timeStamp",ts)
+                      .attr("timeStampTag",ts.split(":")[0]);
 
-               if (feature.properties.hasOwnProperty("media")){
-                 // add media to circle
-                  d3.select(".tweetID_"+tweetID)
-                    .attr('media',feature.properties.media)
-               }
-            }
-        });
+                   if (feature.properties.hasOwnProperty("media")){
+                     // add media to circle
+                      d3.select(".tweetID_"+tweetID)
+                        .attr('media',feature.properties.media)
+                   }
+                }
+            });
+        }
     })
     // sort points
     var sorted_keys = Object.keys(point_counts).sort(function(a,b){return point_counts[b]-point_counts[a]})
@@ -334,7 +337,7 @@ function add_points_to_map(data,map){
 
 }
 //d3.json("data/BoulderFlood_viewer.json", function(collection) {
-d3.json("data/event_viewer.json", function(collection) {
+d3.json("data/event_viewer2.json", function(collection) {
     console.log(["collection:",collection])
 
     // all sizes
