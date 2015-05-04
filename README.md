@@ -48,6 +48,10 @@ South: 39.9088
  - [Brush in Action](http://bl.ocks.org/mbostock/1667367)
 ![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/brush.png)
 
+11. Add scrolling for brush selections.
+ - [Scrolling div content](http://stackoverflow.com/questions/17954181/scrolling-only-content-div-others-should-be-fixed)
+![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/scroll.png)
+
 11. Ideas for iteration:
  - New statistics field (both global and interval level).
  - Radio buttons for timeline stats.
