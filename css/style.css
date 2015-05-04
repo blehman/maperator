@@ -16,17 +16,11 @@ body {
 }
 
 #map {
-    width: 50%;
-    height: 70%;
-    left: 2%;
-    top: 5%;
     border: 2px solid;
     position: absolute;
 }
 
 #tweet {
-    left: 2%;
-    top: 5%;
     position: absolute;
 }
 
@@ -55,10 +49,17 @@ input {
 }
 
 #photo {
-  border: 2px solid;
-  border-radius: 25px;
   position:absolute;
-  top:300px;
 }
 
+.brushElement .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+.resize {
+  stroke: #111;
+  fill: #111;
+}
 
