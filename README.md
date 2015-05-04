@@ -44,8 +44,11 @@ South: 39.9088
  - [Created a work-around](http://stackoverflow.com/questions/29133104/using-instagrams-oembed-with-d3#answer-29139135)
 ![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/instagram.png)
 
+10. Learn how to use a brush.
+ - [Brush in Action](http://bl.ocks.org/mbostock/1667367)
+![](https://raw.githubusercontent.com/blehman/maperator/master/imgs/brush.png)
 
-10. Ideas for iteration:
+11. Ideas for iteration:
  - New statistics field (both global and interval level).
  - Radio buttons for timeline stats.
  - Bar graph for external data by date.
