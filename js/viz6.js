@@ -74,6 +74,7 @@ function set_sizes(){
     d3.select('#photo')
       .style('margin-left',sizes.tweetMarginLeft + 'px')
       .style('top',sizes.photoTop + 'px')
+      .style('border-radius','20px')
       .style('height',sizes.photoHeight + 'px');
 
     var scales = update_scales(sizes);
@@ -185,11 +186,8 @@ function create_timeline2(data, sizes){
               } else {
                 d3.select(this).style({fill: "steelblue", stroke: "steelblue"});
               }
-
         })
     }
-
-
 }
 
 function add_features_to_map(timeStamp,features,map){
@@ -215,8 +213,6 @@ function add_longlat_to_map(timeStamp,features,map,geoLayer){
         geoLayer.addData(feature);
     });
 }
-
-
 
 function convert_to_array(data,map){
 
@@ -271,12 +267,11 @@ function add_points_to_map(data,map){
             if (decimal_count(latitude.toString())>4 & decimal_count(longitude.toString())>4){
 
                 // Use leaflet to add circles to the map
-                L.circle([+latitude,+longitude],35,{
+                L.circle([+latitude,+longitude],130,{
                     color: 'steelblue',
                     fillColor: 'steelblue',
                     fillOpacity: 0.2,
-                    className: "tweet_location_pre_data",
-                    //radius: 15
+                    className: "tweet_location_pre_data"
                 }).addTo(map);
 
                 // add data to circles
@@ -295,7 +290,6 @@ function add_points_to_map(data,map){
                     .attr('media',feature.properties.media)
                }
             }
-
         });
     })
     // sort points
@@ -367,4 +361,3 @@ d3.json("data/event_viewer.json", function(collection) {
 
     });
 });
-
