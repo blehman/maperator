@@ -265,7 +265,7 @@ function convert_to_array(data,map){
             // create timeline data
             parsedDataArray.push({
               key:parseDate(ts.key)
-              , value:+ts.value.stats.tweets_geo_all
+              , value:+ts.value.stats.tweets
             });
         });
         return parsedDataArray.sort(function(a,b){
@@ -279,18 +279,19 @@ function decimal_count(num) {
   return (num.split('.')[1] || []).length;
 }
 
+//Adding Geo-tagged Tweets with media.
 function add_points_to_map(data,map){
     var dateArray = Object.keys(data.time_series.interval_data);
     var point_counts = {};
     dateArray.forEach(function(ts){
-        if (data.time_series.interval_data[ts].hasOwnProperty("tweets_geo")){
-            data.time_series.interval_data[ts].tweets_geo.features.forEach(function(feature){
+        if (data.time_series.interval_data[ts].hasOwnProperty("tweets_geo_with_media")){
+            data.time_series.interval_data[ts].tweets_geo_with_media.forEach(function(tweet){
 
                 // get geo
-                var longitude = feature.geometry.coordinates[0];
-                var latitude  = feature.geometry.coordinates[1];
-                var tweetUrl = feature.properties.tweet_url;
-                var tweetID = feature.properties.tweet_url.split('/')[5];
+                var longitude = tweet.coordinates[0];
+                var latitude  = tweet.coordinates[1];
+                var tweetUrl = tweet.tweet_url;
+                var tweetID = tweet.tweet_url.split('/')[5];
 
                 // remove this if block once the geo is corrected
                 if (decimal_count(latitude.toString())>4 & decimal_count(longitude.toString())>4){
@@ -314,7 +315,7 @@ function add_points_to_map(data,map){
                       .attr("timeStamp",ts)
                       .attr("timeStampTag",ts.split(":")[0]);
 
-                   if (feature.properties.hasOwnProperty("media")){
+                   if (tweet.hasOwnProperty("media")){  //Actually, all tweets in this array have media.
                      // add media to circle
                       d3.select(".tweetID_"+tweetID)
                         .attr('media',feature.properties.media)
@@ -337,7 +338,7 @@ function add_points_to_map(data,map){
 
 }
 //d3.json("data/BoulderFlood_viewer.json", function(collection) {
-d3.json("data/event_viewer2.json", function(collection) {
+d3.json("data/event_viewer.json", function(collection) {
     console.log(["collection:",collection])
 
     // all sizes
