@@ -117,6 +117,7 @@ function update_scales(sizes){
 
 function create_timeline2(data, sizes){
     d3.select(".volume").remove();
+    console.log(["data:",data]);
 
     // get scales
     var scales = update_scales(sizes);
@@ -244,14 +245,14 @@ function add_longlat_to_map(timeStamp,features,map,geoLayer){
 
 function convert_to_array(data,map){
 
-    // to iterate, we transform the object to array 
+    // to iterate, we transform the object to array
     var dataArray = d3.entries(data.time_series.interval_data);
 
     // function for parsing dates
     var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
 
     // create empty layer to add points
-    var geoLayer = L.geoJson().addTo(map)
+    //var geoLayer = L.geoJson().addTo(map)
 
     // parse dates and coerce values
     function iterate_(dataArray){
@@ -263,9 +264,14 @@ function convert_to_array(data,map){
             //add_longlat_to_map(ts.key,ts.value.tweets_geo.features,map,geoLayer);
 
             // create timeline data
+            if (ts.value.stats.hasOwnProperty("tweets")){
+                var count = +ts.value.stats.tweets
+            }else{
+                var count = +0
+            }
             parsedDataArray.push({
               key:parseDate(ts.key)
-              , value:+ts.value.stats.tweets_geo_all
+              , value:count
             });
         });
         return parsedDataArray.sort(function(a,b){
@@ -283,14 +289,15 @@ function add_points_to_map(data,map){
     var dateArray = Object.keys(data.time_series.interval_data);
     var point_counts = {};
     dateArray.forEach(function(ts){
-        if (data.time_series.interval_data[ts].hasOwnProperty("tweets_geo")){
-            data.time_series.interval_data[ts].tweets_geo.features.forEach(function(feature){
+        if (data.time_series.interval_data[ts].hasOwnProperty("tweets_geo_with_media")){
+            data.time_series.interval_data[ts].tweets_geo_with_media.forEach(function(feature){
 
-                // get geo
-                var longitude = feature.geometry.coordinates[0];
-                var latitude  = feature.geometry.coordinates[1];
-                var tweetUrl = feature.properties.tweet_url;
-                var tweetID = feature.properties.tweet_url.split('/')[5];
+                // get geo and metadata
+                var longitude = feature.coordinates[0];
+                var latitude  = feature.coordinates[1];
+                var tweetUrl = feature.tweet_url;
+                var tweetID = feature.tweet_url.split('/')[5];
+                var mediaArray = feature.media;
 
                 // remove this if block once the geo is corrected
                 if (decimal_count(latitude.toString())>4 & decimal_count(longitude.toString())>4){
@@ -312,13 +319,9 @@ function add_points_to_map(data,map){
                       .attr("tweet_url",tweetUrl)
                       .attr("tweetID",tweetID)
                       .attr("timeStamp",ts)
-                      .attr("timeStampTag",ts.split(":")[0]);
+                      .attr("timeStampTag",ts.split(":")[0])
+                      .attr("mediaArray",mediaArray);
 
-                   if (feature.properties.hasOwnProperty("media")){
-                     // add media to circle
-                      d3.select(".tweetID_"+tweetID)
-                        .attr('media',feature.properties.media)
-                   }
                 }
             });
         }
@@ -337,7 +340,7 @@ function add_points_to_map(data,map){
 
 }
 //d3.json("data/BoulderFlood_viewer.json", function(collection) {
-d3.json("data/event_viewer2.json", function(collection) {
+d3.json("data/event_viewer3.json", function(collection) {
     console.log(["collection:",collection])
 
     // all sizes
