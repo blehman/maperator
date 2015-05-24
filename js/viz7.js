@@ -73,7 +73,6 @@ function set_sizes(){
       .style('margin-left',sizes.tweetMarginLeft + 'px')
       .style('height',"600px")
       .style('overflow',"auto")
-      .style('border','2px solid')
       .style('width',"520px")
       .style('top','-940px');
 
@@ -187,15 +186,18 @@ function create_timeline2(data, sizes){
         var tweetIDs = [];
         //console.log(brush.extent())
         d3.selectAll(".tweet_location").each(function(d) {
-              var checkDate = new Date(this.getAttribute("timeStamp"));
-              var lowExtent = new Date(brush.extent()[0]),
-                  highExtent  = new Date(brush.extent()[1]);
-              if (lowExtent <= checkDate && checkDate <= highExtent) {
-                d3.select(this).style({fill: "red", stroke: "red"});
-                tweetIDs.push(d3.select(this).attr("tweetID"))
-              } else {
-                d3.select(this).style({fill: "steelblue", stroke: "steelblue"});
-              }
+           // add a border to the tweet list
+            d3.select("#tweets")
+              .style('border','2px solid');
+            var checkDate = new Date(this.getAttribute("timeStamp"));
+            var lowExtent = new Date(brush.extent()[0]),
+                highExtent  = new Date(brush.extent()[1]);
+            if (lowExtent <= checkDate && checkDate <= highExtent) {
+              d3.select(this).style({fill: "red", stroke: "red"});
+              tweetIDs.push(d3.select(this).attr("tweetID"))
+            } else {
+              d3.select(this).style({fill: "steelblue", stroke: "steelblue"});
+            }
         })
         console.log(tweetIDs);
 
@@ -297,10 +299,10 @@ function add_points_to_map(data,map){
                 var latitude  = feature.coordinates[1];
                 var tweetUrl = feature.tweet_url;
                 var tweetID = feature.tweet_url.split('/')[5];
-                var mediaArray = feature.media;
+                var mediaURL = feature.media;
 
                 // remove this if block once the geo is corrected
-                if (decimal_count(latitude.toString())>4 & decimal_count(longitude.toString())>4){
+                //if (decimal_count(latitude.toString())>4 & decimal_count(longitude.toString())>4){
 
                     // Use leaflet to add circles to the map
                     L.circleMarker([+latitude,+longitude],{
@@ -320,9 +322,9 @@ function add_points_to_map(data,map){
                       .attr("tweetID",tweetID)
                       .attr("timeStamp",ts)
                       .attr("timeStampTag",ts.split(":")[0])
-                      .attr("mediaArray",mediaArray);
+                      .attr("mediaURL",mediaURL);
 
-                }
+                //}
             });
         }
     })
@@ -367,6 +369,9 @@ d3.json("data/event_viewer3.json", function(collection) {
     // Mouseover event that produces embeded tweet
     var circles = d3.selectAll(".tweet_location")
     circles.on("mouseover",function(event){
+        // removes the border on the tweet list
+        d3.select("#tweets")
+          .style('border',null);
 
         // removes old embeded tweet and tweet list
         var element = d3.select(this)
@@ -383,14 +388,16 @@ d3.json("data/event_viewer3.json", function(collection) {
         );
 
         // add new photo
-        if (element.attr("media") != null){
-            if (element.attr("media").match("instagram.com") != null){
-                // embeds instagram photo
-                d3.select("body").append('img').attr('id','photo')
-                  .attr('src','http://instagram.com/p/' + element.attr("media").split('/')[4] +'/media/?size=l')
-                  .attr('border','2px solid')
-                  .attr('border-radius','25px');
-            }
+        console.log(["element.attr('mediaURL'):",element.attr("mediaURL")])
+        if (element.attr("mediaURL") != null){
+            var photoURL = element.attr("mediaURL")
+            if (photoURL.match("instagram.com") != null){
+                    // embeds instagram photo
+                    d3.select("body").append('img').attr('id','photo')
+                      .attr('src','http://instagram.com/p/' + photoURL.split('/')[4] +'/media/?size=l')
+                      .attr('border','2px solid')
+                      .attr('border-radius','25px');
+                }
         }
         var sizes = set_sizes();
 
