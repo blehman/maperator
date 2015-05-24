@@ -43,7 +43,7 @@ function set_sizes(){
         var tweetWidgetHeight = +d3.select("#tweet iframe")[0][0].height;
     }
 
-    // ISSUE: remove the 150 and replace with `tweetWidgetHeight`
+    // ISSUE: remove the 155 and replace with `tweetWidgetHeight` once the tweet height is determined.
     sizes["photoTop"] = sizes.tweetTop + 155  + d3.min([sizes.windowWidth*0.1,20]);
 
     // adjust map
@@ -71,10 +71,10 @@ function set_sizes(){
     // adjust tweet list
     d3.select('#tweets')
       .style('margin-left',sizes.tweetMarginLeft + 'px')
-      .style('height',"600px")
+      .style('height',"800px")
       .style('overflow',"auto")
       .style('width',"520px")
-      .style('top','-940px');
+      .style('top','-520px');
 
     // adjust photo
     d3.select('#photo')
