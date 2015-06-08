@@ -16,18 +16,20 @@ body {
 }
 
 #map {
-    width: 50%;
-    height: 70%;
-    left: 50px;
-    top: 50px;
     border: 2px solid;
+    position: absolute;
 }
 
-#tweet {
-  margin-left: 200;
-  margin-top: 50;
+#tweet_from_map {
+    position: absolute;
 }
 
+#tweets_vit {
+    position: relative;
+    margin-top: "-500px";
+    height: 200px;
+    overflow: auto;
+}
 .axis path,
 .axis line {
   fill: none;
@@ -53,10 +55,18 @@ input {
 }
 
 #photo {
-  border: 2px solid;
-  border-radius: 25px;
   position:absolute;
-  top:300px;
 }
 
+.brushElement .extent {
+  stroke: #red;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+.resize rect {
+  stroke: #111;
+  fill: #111;
+  
+}
 
