@@ -116,7 +116,6 @@ function update_scales(sizes){
 
 function create_timeline2(data, sizes){
     d3.select(".volume").remove();
-    console.log(["data:",data]);
 
     // get scales
     var scales = update_scales(sizes);
@@ -184,7 +183,6 @@ function create_timeline2(data, sizes){
     function brushed(){
         // create an array of tweetID matching the brushed range
         var tweetIDs = [];
-        //console.log(brush.extent())
         d3.selectAll(".tweet_location").each(function(d) {
            // add a border to the tweet list
             d3.select("#tweets")
@@ -199,7 +197,6 @@ function create_timeline2(data, sizes){
               d3.select(this).style({fill: "steelblue", stroke: "steelblue"});
             }
         })
-        console.log(tweetIDs);
 
         // remove tweet, tweet list, and photo
         d3.select("#tweets").selectAll('*').remove();
@@ -274,6 +271,7 @@ function convert_to_array(data,map){
             parsedDataArray.push({
               key:parseDate(ts.key)
               , value:count
+              , vit:ts.value.tweets_vit
             });
         });
         return parsedDataArray.sort(function(a,b){
@@ -338,11 +336,10 @@ function add_points_to_map(data,map){
         output.push({name:point_counts[name]})
         //output[d]=point_counts[d]
     })
-    console.log(output)
 
 }
 //d3.json("data/BoulderFlood_viewer.json", function(collection) {
-d3.json("data/event_viewer3.json", function(collection) {
+d3.json("data/event_viewer4.json", function(collection) {
     console.log(["collection:",collection])
 
     // all sizes
@@ -353,7 +350,6 @@ d3.json("data/event_viewer3.json", function(collection) {
 
     // build timeline
     var timelineData = convert_to_array(collection,map);
-    console.log(timelineData);
     create_timeline2(timelineData,sizes);
 
     // add point to map
@@ -388,7 +384,6 @@ d3.json("data/event_viewer3.json", function(collection) {
         );
 
         // add new photo
-        console.log(["element.attr('mediaURL'):",element.attr("mediaURL")])
         if (element.attr("mediaURL") != null){
             var photoURL = element.attr("mediaURL")
             if (photoURL.match("instagram.com") != null){
